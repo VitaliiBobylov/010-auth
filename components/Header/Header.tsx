@@ -1,6 +1,7 @@
 import Link from "next/link";
 import css from "./Header.module.css";
 import TagsMenu from "../TagsMenu/TagsMenu";
+import AuthNavigation from "../AuthNavigation/AuthNavigation";
 
 export default function Header() {
   const tags = [
@@ -25,9 +26,12 @@ export default function Header() {
               Home
             </Link>
           </li>
+
           <li className={css.navItem}>
             <TagsMenu tags={tags} />
           </li>
+
+          <AuthNavigation />
         </ul>
       </nav>
     </header>
