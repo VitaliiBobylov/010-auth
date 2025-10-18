@@ -27,7 +27,6 @@ export async function checkSessionServer(): Promise<User | null> {
   return res.json();
 }
 
-// notes
 export async function fetchNotesServer(search = "", page = 1, tag?: string) {
   const cookieStore = cookies();
   const params = new URLSearchParams({

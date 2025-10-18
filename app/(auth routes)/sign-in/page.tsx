@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api/clientApi";
-import { useAuthStore } from "@/lib/store/authStore";
-import css from "./SignInPage.module.css";
+import css from "./page.module.css";
 
 export default function SignInPage() {
   const [error, setError] = useState("");
   const router = useRouter();
-  const { setUser } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,8 +17,7 @@ export default function SignInPage() {
       .value;
 
     try {
-      const user = await login(email, password);
-      setUser(user);
+      await login(email, password);
       router.push("/profile");
     } catch {
       setError("Invalid email or password");
@@ -29,7 +26,7 @@ export default function SignInPage() {
 
   return (
     <main className={css.mainContent}>
-      <form className={css.form} onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={css.form}>
         <h1 className={css.formTitle}>Sign in</h1>
 
         <div className={css.formGroup}>
@@ -40,7 +37,7 @@ export default function SignInPage() {
             name="email"
             className={css.input}
             required
-            autoComplete="email"
+            autoComplete="username"
           />
         </div>
 
@@ -52,7 +49,7 @@ export default function SignInPage() {
             name="password"
             className={css.input}
             required
-            autoComplete="password"
+            autoComplete="current-password"
           />
         </div>
 

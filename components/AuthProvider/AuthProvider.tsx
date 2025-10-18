@@ -1,15 +1,16 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { getMe } from "@/lib/api/clientApi";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
-export default function AuthProvider({
-  children,
-}: {
+interface AuthProviderProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const { setUser, clearAuth } = useAuthStore();
   const router = useRouter();
@@ -22,7 +23,8 @@ export default function AuthProvider({
         setUser(user);
       } catch {
         clearAuth();
-        if (pathname.startsWith("/profile")) {
+
+        if (pathname.startsWith("/profile") || pathname.startsWith("/notes")) {
           router.push("/sign-in");
         }
       } finally {
@@ -31,9 +33,22 @@ export default function AuthProvider({
     }
 
     checkSession();
-  }, [pathname, setUser, clearAuth, router]);
-
-  if (loading) return <p>Loading...</p>;
+  }, [pathname]);
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+          fontSize: "1.2rem",
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }

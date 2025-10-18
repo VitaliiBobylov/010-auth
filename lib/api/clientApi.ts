@@ -1,5 +1,6 @@
 import { api } from "./api";
 import { User } from "@/types/user";
+import axios from "axios";
 
 export async function login(email: string, password: string): Promise<User> {
   const res = await api.post("/auth/login", { email, password });
@@ -7,8 +8,21 @@ export async function login(email: string, password: string): Promise<User> {
 }
 
 export async function register(email: string, password: string): Promise<User> {
-  const res = await api.post("/auth/register", { email, password });
-  return res.data;
+  try {
+    const res = await api.post(
+      "/auth/register",
+      { email, password },
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      throw new Error(
+        err.response?.data?.message || "Registration failed. Try again."
+      );
+    }
+    throw new Error("Registration failed. Try again.");
+  }
 }
 
 export async function logout(): Promise<void> {
